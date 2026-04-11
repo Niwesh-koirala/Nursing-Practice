@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nursing Test Prep</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-wrap">
+        <div class="logo-mark">ati</div>
+        <div class="title-wrap">
+          <div class="exam-title">Priyanka Baral  Endocrine Function Assessment Test</div>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <button id="calculatorBtn" class="icon-btn" type="button" aria-label="Open calculator">🧮</button>
+        <button id="closeBtn" class="close-btn" type="button">✖ CLOSE</button>
+      </div>
+    </header>
+
+    <div id="setupScreen" class="screen active">
+      <div class="setup-card">
+        <h1>Nursing Test Prep</h1>
+        <p class="setup-subtext">
+          Choose how many questions you want to practice. 
+        </p>
+
+        <div class="setup-grid">
+          <label class="field">
+            <span>Number of questions</span>
+            <input id="questionCountInput" type="number" min="1" step="1" value="10" />
+          </label>
+
+          <label class="checkbox-row">
+            <input id="shuffleQuestionsInput" type="checkbox" checked />
+            <span>Shuffle questions</span>
+          </label>
+
+          <label class="checkbox-row">
+            <input id="showRationaleInput" type="checkbox" checked />
+            <span>Show rationale after submit</span>
+          </label>
+        </div>
+
+        <div class="bank-info">
+          <strong>Question bank loaded:</strong> <span id="bankCount">Loading...</span>
+        </div>
+
+        <div id="loadStatus" class="setup-note">Loading question bank...</div>
+
+        <div class="setup-actions">
+          <button id="startExamBtn" class="primary-btn" type="button" disabled>Start Practice Exam</button>
+        </div>
+
+        <div class="setup-note">
+          All the best.
+        </div>
+      </div>
+    </div>
+
+    <div id="examScreen" class="screen">
+      <main class="exam-main">
+        <div class="exam-header-row">
+          <div class="question-counter" id="questionCounter">Question: 1 of 1</div>
+          <div class="time-display">Time Elapsed: <span id="timeElapsed">00:00:00</span></div>
+        </div>
+
+        <div class="question-prompt" id="questionPrompt"></div>
+        <div class="progress-dots" id="progressDots"></div>
+
+        <form id="answersForm" class="answers-list"></form>
+
+        <div class="question-actions">
+          <button id="prevBtn" class="nav-btn prev" type="button">PREVIOUS</button>
+          <div class="middle-actions">
+            <button id="flagBtn" class="secondary-btn" type="button">FLAG</button>
+            <button id="submitExamBtn" class="submit-btn" type="button">SUBMIT EXAM</button>
+          </div>
+          <button id="nextBtn" class="nav-btn next" type="button">CONTINUE</button>
+        </div>
+      </main>
+    </div>
+
+    <div id="resultScreen" class="screen">
+      <div class="result-card">
+        <h2>Exam Complete</h2>
+        <div class="score-circle">
+          <span id="scorePercent">0%</span>
+        </div>
+        <div class="score-line" id="scoreLine">You got 0 out of 0 correct.</div>
+
+        <div class="result-meta">
+          <div>Total questions: <strong id="totalQuestionsOut">0</strong></div>
+          <div>Correct: <strong id="correctOut">0</strong></div>
+          <div>Incorrect: <strong id="incorrectOut">0</strong></div>
+          <div>Flagged: <strong id="flaggedOut">0</strong></div>
+          <div>Time used: <strong id="timeUsedOut">00:00:00</strong></div>
+        </div>
+
+        <div id="rationaleReview" class="rationale-review"></div>
+
+        <div class="result-actions">
+          <button id="restartBtn" class="primary-btn" type="button">Practice Again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="calculatorModal" class="modal hidden">
+    <div class="modal-card calculator-card">
+      <div class="modal-header">
+        <h3>Calculator</h3>
+        <button id="closeCalculatorBtn" class="close-btn small" type="button">✖ CLOSE</button>
+      </div>
+
+      <div class="calculator-display" id="calculatorDisplay">0</div>
+
+      <div class="calculator-grid">
+        <button type="button" class="calc-btn fn" data-calc="mc">mc</button>
+        <button type="button" class="calc-btn fn" data-calc="mr">mr</button>
+        <button type="button" class="calc-btn fn" data-calc="mplus">m+</button>
+        <button type="button" class="calc-btn fn" data-calc="mminus">m-</button>
+
+        <button type="button" class="calc-btn fn" data-calc="clear">C</button>
+        <button type="button" class="calc-btn fn" data-calc="back">⌫</button>
+        <button type="button" class="calc-btn op" data-calc="/">÷</button>
+        <button type="button" class="calc-btn op" data-calc="*">×</button>
+
+        <button type="button" class="calc-btn" data-calc="7">7</button>
+        <button type="button" class="calc-btn" data-calc="8">8</button>
+        <button type="button" class="calc-btn" data-calc="9">9</button>
+        <button type="button" class="calc-btn op" data-calc="-">−</button>
+
+        <button type="button" class="calc-btn" data-calc="4">4</button>
+        <button type="button" class="calc-btn" data-calc="5">5</button>
+        <button type="button" class="calc-btn" data-calc="6">6</button>
+        <button type="button" class="calc-btn op" data-calc="+">+</button>
+
+        <button type="button" class="calc-btn" data-calc="1">1</button>
+        <button type="button" class="calc-btn" data-calc="2">2</button>
+        <button type="button" class="calc-btn" data-calc="3">3</button>
+        <button type="button" class="calc-btn equal" data-calc="=">=</button>
+
+        <button type="button" class="calc-btn zero" data-calc="0">0</button>
+        <button type="button" class="calc-btn" data-calc=".">.</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
