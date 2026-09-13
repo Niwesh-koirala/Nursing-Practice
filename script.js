@@ -126,11 +126,53 @@ function renderQuestion() {
   renderProgressDots();
 }
 
-function startExam() {
-  const totalAvailable = questionBank.length;
-  let requested = parseInt(questionCountInput.value, 10);
+const chapterOptions = document.getElementById('chapterOptions');
+const selectionStatus = document.getElementById('selectionStatus');
 
-  if (!requested || requested < 1) {
+function getSelectedQuestions() {
+  const selected = new Set([...chapterOptions.querySelectorAll('input:checked')].map(input => input.value));
+  return questionBank.filter(question => selected.has(question.chapter));
+}
+
+function updateChapterSelection() {
+  const available = getSelectedQuestions().length;
+  questionCountInput.max = available;
+  if (available > 0 && Number(questionCountInput.value) > available) questionCountInput.value = available;
+  selectionStatus.textContent = available
+    ? available + ' questions available in your selected chapters.'
+    : 'Select at least one chapter to start practicing.';
+  startExamBtn.disabled = available === 0;
+}
+
+function renderChapters() {
+  chapterOptions.replaceChildren();
+  const counts = new Map();
+  questionBank.forEach(q => counts.set(q.chapter, (counts.get(q.chapter) || 0) + 1));
+  [...counts.keys()].sort((a, b) => a.localeCompare(b, undefined, { numeric: true })).forEach(chapter => {
+    const label = document.createElement('label');
+    label.className = 'chapter-option';
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.value = chapter;
+    input.checked = true;
+    input.addEventListener('change', updateChapterSelection);
+    const title = document.createElement('span');
+    title.textContent = chapter;
+    const count = document.createElement('small');
+    count.textContent = counts.get(chapter) + ' questions';
+    label.append(input, title, count);
+    chapterOptions.appendChild(label);
+  });
+  updateChapterSelection();
+}
+
+function startExam() {
+  const selectedQuestions = getSelectedQuestions();
+  const totalAvailable = selectedQuestions.length;
+  if (!totalAvailable) { updateChapterSelection(); return; }
+  let requested = Number(questionCountInput.value);
+
+  if (!Number.isInteger(requested) || requested < 1) {
     alert('Enter a valid number of questions.');
     return;
   }
@@ -142,7 +184,7 @@ function startExam() {
 
   showRationale = showRationaleInput.checked;
 
-  const source = shuffleQuestionsInput.checked ? shuffleArray(questionBank) : [...questionBank];
+  const source = shuffleQuestionsInput.checked ? shuffleArray(selectedQuestions) : [...selectedQuestions];
   examQuestions = source.slice(0, requested);
   currentIndex = 0;
   answers = Array(requested).fill(null);
@@ -333,6 +375,7 @@ function parseCSV(text) {
 
     mapped.push({
       id,
+      chapter: pickField(rowObj, ['chapter', 'Chapter', 'CHAPTER']) || 'Unassigned chapter',
       question: questionText,
       options,
       correctIndex,
@@ -361,7 +404,7 @@ async function loadQuestionBank() {
     questionCountInput.max = questionBank.length;
     questionCountInput.value = Math.min(10, questionBank.length);
     loadStatus.textContent = 'Question bank loaded successfully.';
-    startExamBtn.disabled = false;
+    renderChapters();
   } catch (error) {
     console.error(error);
     bankCount.textContent = '0';

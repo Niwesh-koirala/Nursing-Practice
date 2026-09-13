@@ -514,3 +514,13 @@ body {
     font-size: 1.2rem;
   }
 }
+
+.chapter-fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+.chapter-fieldset legend { font-weight: 700; }
+.chapter-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.chapter-option { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 6px 10px; padding: 16px; border: 1px solid #bfc8cc; border-radius: 10px; cursor: pointer; overflow-wrap: anywhere; }
+.chapter-option:has(input:checked) { background: #f0f9fc; border-color: #468497; }
+.chapter-option:focus-within { outline: 2px solid #245462; outline-offset: 3px; }
+.chapter-option input { width: 18px; height: 18px; margin: 0; accent-color: #245462; }
+.chapter-option span { font-weight: 700; }
+.chapter-option small { grid-column: 2; color: var(--muted); }

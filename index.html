@@ -29,10 +29,16 @@
       <div class="setup-card">
         <h1>Nursing Test Prep</h1>
         <p class="setup-subtext">
-          Choose how many questions you want to practice. 
+          Choose your chapters and the number of questions to practice.
         </p>
 
         <div class="setup-grid">
+<fieldset class="chapter-fieldset">
+<legend>Chapters to practice</legend>
+<p class="setup-note">Select one or more chapters.</p>
+<div id="chapterOptions" class="chapter-options"></div>
+<p id="selectionStatus" class="setup-note" role="status" aria-live="polite"></p>
+</fieldset>
           <label class="field">
             <span>Number of questions</span>
             <input id="questionCountInput" type="number" min="1" step="1" value="10" />
